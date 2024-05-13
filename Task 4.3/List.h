@@ -20,10 +20,11 @@ public:
 	List& operator = (const List& list);
 	List(List&& list);
 	List& operator = (List&& list);
+	void Delete();
 	~List();
 	void push(int position, T number);
 	void pop(T value);
-	bool findEqual(T value);
+	int findEqual(T value);
 	void print();
 	T get(int position);
 };
@@ -151,7 +152,7 @@ List<T>& List<T>::operator = (List&& list)
 }
 
 template <typename T>
-List<T>::~List()
+void List<T>::Delete()
 {
 	Node* del = this->top;
 	while (del->sled)
@@ -167,6 +168,12 @@ List<T>::~List()
 	del->pred = nullptr;
 	del->sled = nullptr;
 	delete del;
+}
+
+template <typename T>
+List<T>::~List()
+{
+	this->Delete();
 }
 
 template <typename T>
@@ -197,6 +204,7 @@ void List<T>::push(int position, T number)
 			is = false;
 			break;
 		}
+		point = point->sled;
 		pos++;
 	}
 	if (is == true)
@@ -243,21 +251,24 @@ void List<T>::pop(T value)
 }
 
 template <typename T>
-bool List<T>::findEqual(T value)
+int List<T>::findEqual(T value)
 {
 	Node* point = top;
+	int index = 0;
+	if (!point) return -1;
 	while (point->value != value)
 	{
 		if (!point->sled) break;
 		point = point->sled;
+		++index;
 	}
 	if (point->value == value)
 	{
-		return true;
+		return index;
 	}
 	else
 	{
-		return false;
+		return -1;
 	}
 }
 
