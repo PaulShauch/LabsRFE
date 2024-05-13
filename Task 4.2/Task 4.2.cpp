@@ -8,12 +8,17 @@ using namespace std;
 
 void function(ForwardList<char>& L1, ForwardList<char>& L2, ForwardList<char>& L)
 {
-	for (int i = -128; i < 128; i++)
+	int i = 0;
+	int n = 0;
+	while (L1.get(i))
 	{
-		if (L1.findEqual(i) && !L2.findEqual(i))
+		char value = L1.get(i);
+		if (L2.findEqual(value) < 0 && L.findEqual(value) < 0)
 		{
-			L.push(0, i);
+			L.push(n, value);
+			++n;
 		}
+		i++;
 	}
 }
 

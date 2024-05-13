@@ -19,11 +19,13 @@ public:
 	ForwardList& operator = (const ForwardList& list);
 	ForwardList(ForwardList&& list);
 	ForwardList& operator = (ForwardList&& list);
+	void Delete();
 	~ForwardList();
 	void push(int position, T number);
 	void pop(T value);
-	bool findEqual(T value);
+	int findEqual(T value);
 	void print();
+	T get(int position);
 };
 
 template <typename T>
@@ -45,8 +47,9 @@ ForwardList<T>::ForwardList(T value)
 template <typename T>
 ForwardList<T>::ForwardList(const ForwardList& list)
 {
-	Node* plist = &list;
+	Node* plist = list->top;
 	Node* pthis = new Node;
+	this->top = pthis;
 	while (plist->p)
 	{
 		pthis->value = plist->value;
@@ -61,8 +64,9 @@ ForwardList<T>::ForwardList(const ForwardList& list)
 template <typename T>
 ForwardList<T>& ForwardList<T>::operator = (const ForwardList& list)
 {
-	Node* plist = &list;
+	Node* plist = list->top;
 	Node* pthis = new Node;
+	this->top = pthis;
 	while (plist->p)
 	{
 		pthis->value = plist->value;
@@ -123,7 +127,7 @@ ForwardList<T>& ForwardList<T>::operator = (ForwardList&& list)
 }
 
 template <typename T>
-ForwardList<T>::~ForwardList()
+void ForwardList<T>::Delete()
 {
 	Node* del = this->top;
 	while (del->p)
@@ -135,7 +139,14 @@ ForwardList<T>::~ForwardList()
 		delete delet;
 	}
 	del->value = 0;
+	del->p = nullptr;
 	delete del;
+}
+
+template <typename T>
+ForwardList<T>::~ForwardList()
+{
+	this->Delete();
 }
 
 template <typename T>
@@ -163,6 +174,7 @@ void ForwardList<T>::push(int position, T number)
 			is = false;
 			break;
 		}
+		point = point->p;
 		pos++;
 	}
 	if (is == true)
@@ -203,21 +215,24 @@ void ForwardList<T>::pop(T value)
 }
 
 template <typename T>
-bool ForwardList<T>::findEqual(T value)
+int ForwardList<T>::findEqual(T value)
 {
 	Node* point = top;
+	int index = 0;
+	if (!point) return -1;
 	while (point->value != value)
 	{
 		if (!point->p) break;
 		point = point->p;
+		++index;
 	}
 	if (point->value == value)
 	{
-		return true;
+		return index;
 	}
 	else
 	{
-		return false;
+		return -1;
 	}
 }
 
@@ -231,4 +246,18 @@ void ForwardList<T>::print()
 		point = point->p;
 	}
 	cout << point->value << endl;
+}
+
+template <typename T>
+T ForwardList<T>::get(int position)
+{
+	Node* pointer = this->top;
+	int pos = 0;
+	while (pos != position)
+	{
+		pos++;
+		pointer = pointer->p;
+		if (!pointer) return 0;
+	}
+	return pointer->value;
 }
