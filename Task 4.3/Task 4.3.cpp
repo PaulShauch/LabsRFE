@@ -13,7 +13,7 @@ int main()
 	List<double> numbers(rand() % 2 * n + (double)rand() / rand());
 	for (int i = 1; i < 2 * n; i++)
 	{
-		numbers.push(i, rand() % 2 * n + (double)rand() / rand());
+		numbers.pushBack(rand() % 2 * n + (double)rand() / rand());
 	}
 	numbers.print();
 	double sum = 0;

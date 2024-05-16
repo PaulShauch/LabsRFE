@@ -13,6 +13,8 @@ private:
 		Node* pred;
 	};
 	Node* top;
+	Node* end;
+	int size;
 public:
 	List();
 	List(T value);
@@ -22,7 +24,11 @@ public:
 	List& operator = (List&& list);
 	void Delete();
 	~List();
+	void pushFront(T number);
+	void pushBack(T number);
 	void push(int position, T number);
+	void popFront();
+	void popBack();
 	void pop(T value);
 	int findEqual(T value);
 	void print();
@@ -36,6 +42,8 @@ List<T>::List()
 	this->top->value = 0;
 	this->top->sled = nullptr;
 	this->top->pred = nullptr;
+	this->end = this->top;
+	this->size = 1;
 }
 
 template <typename T>
@@ -45,6 +53,8 @@ List<T>::List(T value)
 	this->top->value = value;
 	this->top->sled = nullptr;
 	this->top->pred = nullptr;
+	this->end = this->top;
+	this->size = 1;
 }
 
 template <typename T>
@@ -66,6 +76,8 @@ List<T>::List(const List& list)
 	pthis->value = plist->value;
 	pthis->pred = buf;
 	pthis->sled = nullptr;
+	this->end = pthis;
+	this->size = list.size;
 }
 
 template <typename T>
@@ -87,6 +99,8 @@ List<T>& List<T>::operator = (const List& list)
 	pthis->value = plist->value;
 	pthis->pred = buf;
 	pthis->sled = nullptr;
+	this->end = pthis;
+	this->size = list.size;
 	return *this;
 }
 
@@ -114,9 +128,12 @@ List<T>::List(List&& list)
 	pthis->value = plist->value;
 	pthis->pred = buf;
 	pthis->sled = nullptr;
+	this->end = pthis;
 	plist->value = 0;
 	plist->pred = nullptr;
 	plist->sled = nullptr;
+	this->size = list.size;
+	list.size = 0;
 	delete plist;
 }
 
@@ -144,9 +161,12 @@ List<T>& List<T>::operator = (List&& list)
 	pthis->value = plist->value;
 	pthis->pred = buf;
 	pthis->sled = nullptr;
+	this->end = pthis;
 	plist->value = 0;
 	plist->pred = nullptr;
 	plist->sled = nullptr;
+	this->size = list.size;
+	list.size = 0;
 	delete plist;
 	return *this;
 }
@@ -167,6 +187,7 @@ void List<T>::Delete()
 	del->value = 0;
 	del->pred = nullptr;
 	del->sled = nullptr;
+	this->size = 0;
 	delete del;
 }
 
@@ -177,15 +198,43 @@ List<T>::~List()
 }
 
 template <typename T>
+void List<T>::pushFront(T number)
+{
+	Node* po = new Node;
+	po->value = number;
+	po->sled = this->top;
+	po->pred = nullptr;
+	this->top = po;
+	++this->size;
+}
+
+template <typename T>
+void List<T>::pushBack(T number)
+{
+	Node* newNode = new Node;
+	this->end->sled = newNode;
+	newNode->value = number;
+	newNode->sled = nullptr;
+	newNode->pred = this->end;
+	this->end = newNode;
+	++this->size;
+}
+
+template <typename T>
 void List<T>::push(int position, T number)
 {
+	if (position < 0 || position > size)
+	{
+		return;
+	}
 	if (position == 0)
 	{
-		Node* po = new Node;
-		po->value = number;
-		po->sled = this->top;
-		po->pred = nullptr;
-		this->top = po;
+		pushFront(number);
+		return;
+	}
+	if (position == size)
+	{
+		pushBack(number);
 		return;
 	}
 	int pos = 0;
@@ -216,7 +265,35 @@ void List<T>::push(int position, T number)
 		poin->sled = psled;
 		poin->pred = point;
 		if (psled) psled->pred = poin;
+		++this->size;
 	}
+}
+
+template <typename T>
+void List<T>::popFront()
+{
+	if (size <= 0) return;
+	Node* del = this->top;
+	this->top = this->top->sled;
+	this->top->pred = nullptr;
+	--this->size;
+	del->value = 0;
+	del->sled = nullptr;
+	del->pred = nullptr;
+	delete del;
+}
+
+template <typename T>
+void List<T>::popBack()
+{
+	Node* del = this->end;
+	this->end = this->end->pred;
+	this->end->sled = nullptr;
+	del->value = 0;
+	del->sled = nullptr;
+	del->pred = nullptr;
+	delete del;
+	--this->size;
 }
 
 template <typename T>
@@ -232,6 +309,7 @@ void List<T>::pop(T value)
 		pr->sled = nullptr;
 		pr->pred = nullptr;
 		delete pr;
+		this->size--;
 		return;
 	}
 	while (point->sled)
@@ -245,6 +323,7 @@ void List<T>::pop(T value)
 			delete point;
 			point->sled = nullptr;
 			point->pred = nullptr;
+			this->size--;
 			break;
 		}
 	}
@@ -287,13 +366,32 @@ void List<T>::print()
 template <typename T>
 T List<T>::get(int position)
 {
-	Node* pointer = this->top;
-	int pos = 0;
-	while (pos != position)
+	if (position < 0 || position >= size)
 	{
-		if (!pointer) return 0;
-		pointer = pointer->sled;
-		pos++;
+		return 0;
 	}
-	return pointer->value;
+	if (position <= size / 2)
+	{
+		Node* pointer = this->top;
+		int pos = 0;
+		while (pos != position)
+		{
+			if (!pointer) return 0;
+			pointer = pointer->sled;
+			pos++;
+		}
+		return pointer->value;
+	}
+	else
+	{
+		Node* pointer = this->end;
+		int pos = this->size - 1;
+		while (pos != position)
+		{
+			if (!pointer) return 0;
+			pointer = pointer->pred;
+			--pos;
+		}
+		return pointer->value;
+	}
 }
