@@ -117,53 +117,51 @@ String& String::operator + (String& string)
 	return *newStr;
 }
 
-bool String::operator == (String& podstr)
+void String::replace (String& oldpodstr, String& newpodstr)
 {
 	int i = 0;
 	int j = 0;
 	while (i < this->size)
 	{
-		while (podstr.array[j] != this->array[i])
+		while (oldpodstr.array[j] != this->array[i])
 		{
-			if (j >= podstr.size || i >= this->size)
+			if (j >= oldpodstr.size || i >= this->size)
 			{
-				return false;
+				return;
 			}
 			i++;
 		}
-		while (podstr.array[j] == this->array[i] && j < podstr.size && i < this->size)
+		while (oldpodstr.array[j] == this->array[i] && j < oldpodstr.size && i < this->size)
 		{
 			i++;
 			j++;
 		}
-		if (podstr.array[j - 1] == this->array[i - 1] && j == podstr.size)
+		if (oldpodstr.array[j - 1] == this->array[i - 1] && j == oldpodstr.size)
 		{
 			int l = i;
-			i -= podstr.size;
+			i -= oldpodstr.size;
 			j = 0;
-			String newPodstr;
-			cout << "Input new podstr\n";
-			cin >> newPodstr;
-			char* arr = new char[this->size - podstr.size + newPodstr.size];
+			char* arr = new char[this->size - oldpodstr.size + newpodstr.size];
 			for (int k = 0; k < i; k++)
 			{
 				arr[k] = this->array[k];
 			}
-			for (int k = 0; k < newPodstr.size; k++, i++)
+			for (int k = 0; k < newpodstr.size; k++, i++)
 			{
-				arr[i] = newPodstr.array[k];
+				arr[i] = newpodstr.array[k];
 			}
+			int m = i;
 			while (l < this->size)
 			{
 				arr[i] = this->array[l];
 				l++;
 				i++;
 			}
-			this->size = this->size - podstr.size + newPodstr.size;
+			this->size = this->size - oldpodstr.size + newpodstr.size;
 			this->array = arr;
-			break;
+			j = 0;
+			i = m - 1;
 		}
 		i++;
 	}
-	return true;
 }

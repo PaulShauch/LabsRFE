@@ -18,5 +18,5 @@ public:
 	String(String&& string);
 	String& operator = (String&& string);
 	String& operator + (String& string);
-	bool operator == (String& podstr);
+	void replace (String& oldpodstr, String& newpodstr);
 };

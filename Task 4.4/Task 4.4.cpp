@@ -24,11 +24,14 @@ int main()
 	String str;
 	cout << "Input string:\n";
 	cin >> str;
-	String podstr;
-	cout << "Input podstring:\n";
-	cin >> podstr;
-	str = str + str + podstr;
-	while (str == podstr);
+	String oldpodstr;
+	cout << "Input old podstring:\n";
+	cin >> oldpodstr;
+	cout << "Input new podstring:\n";
+	String newpodstr;
+	cin >> newpodstr;
+	str = str + str + oldpodstr;
+	str.replace(oldpodstr, newpodstr);
 	cout << str;
 	return 0;
 }
