@@ -127,7 +127,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Appliances.cpp" />
+    <ClCompile Include="Outerwear.cpp" />
+    <ClCompile Include="Product.cpp" />
+    <ClCompile Include="Sportswear.cpp" />
     <ClCompile Include="Task 6.1.cpp" />
+    <ClCompile Include="Underwear.cpp" />
+    <ClCompile Include="Wear.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Appliances.h" />
+    <ClInclude Include="Outerwear.h" />
+    <ClInclude Include="Product.h" />
+    <ClInclude Include="Sportswear.h" />
+    <ClInclude Include="Underwear.h" />
+    <ClInclude Include="Wear.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
